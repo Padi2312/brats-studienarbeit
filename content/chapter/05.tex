@@ -1,0 +1,26 @@
+%!TEX root = ../../main.tex
+\chapter{PyTorch}
+\section{Einführung}
+PyTorch ist ein Open-Source Bibliothek für Python, die von Facebook entwickelt wurde. Die Bibliothek ist speziell für Maschinelles Lernen und Künstliche Intelligenz ausgelegt und bietet eine große Anzahl von Tools und Funktionen für das Entwickeln von Deep Learning-Modellen. Es ist dafür bekannt mit dynamischen Berechnungsgraphen zu arbeiten, welche für das Entwickeln von Prototypen geeignet sind, da Änderungen zur Laufzeit vorgenommen werden können. PyTorch besteht aus mehreren Hauptkomponenten und bietet ein vielfältiges Ökosystem, das je nach Bedarf verwendet werden kann. Es gibt unter anderem ``torchvision``, das für die Verarbeitung von visuellen Daten geeignet ist, ``torchaudio`` für die Verarbeitung von Audiodateien und noch weitere Komponenten. Das Ökosystem besteht aus vielen zusätzlichen Möglichkeiten noch schneller und einfacher zu arbeiten. Alle Funktionen, die für das Maschinelle Lernen benötigt werden, sind direkt ab Installation mit angeboten und können verwendet werden. Tensoren sind die Hauptdatenstrukturen für alle Berechnungen und sind eine Art multidimensionale Matrizen, genaueres dazu in Abschnitt \ref{sec:Tensoren}. PyTorch bietet die Möglichkeit alle Rechenoperationen auf der \acs{GPU}, also dem Grafikprozessor, auszuführen, um so schnellere Berechnungen durchzuführen. \cite[vgl.][]{PyTorch}
+
+\section{Tensoren}
+\label{sec:Tensoren}
+Ein Tensor ist eine Datenstruktur die in PyTorch verwendet wird, um Daten zu speichern oder verändern. Diese sind multidimensionale Arrays, zu deutsch Listen, die verschiedene Strukturen, wie Skalare,Vektoren, Matrizen und Tensoren darstellen können. \\
+
+\paragraph*{Skalar} ist eine einfache Zahl, wie z.B. eine 1.
+\paragraph*{Vektor} ist ein ein-dimensionaler Array \begin{small}$\left(\begin{array}{c} 1 \\ 0 \\ 1 \end{array}\right)$\end{small}
+\paragraph*{Matrix} ist ein zwei-dimensionaler Array $\begin{bmatrix}
+	1 & 2 \\
+	4 & 3  
+\end{bmatrix}$.
+\paragraph*{Tensor} ist $n$-dimensionaler Array $\begin{pmatrix}
+ \begin{bmatrix} 1 & 2 \\	3 & 4  \end{bmatrix} &  \begin{bmatrix} 9 & 10 \\ 11 & 12  \end{bmatrix}\\
+\begin{bmatrix}	5 & 6 \\	7 & 8  \end{bmatrix} &  \begin{bmatrix} 13 & 14 \\ 15 & 16  \end{bmatrix}
+\end{pmatrix}$
+
+Tensoren können verwendet werden um verschiedene Rechenoperationen wie addieren, subtrahieren, multiplizieren oder dividieren durchzuführen. Darüber hinaus bietet ein Tensor noch mehr Funktionen wie das Konvertieren von einer Ganzzahl in eine Fließkommazahl, oder auch Funktionen um den Maximalwert in einem Tensor zu bekommen. \\
+Ein Vorteil von Tensoren ist die Fähigkeit die Operationen auf der \ac{GPU} ausführen zu lassen. \cite[vgl.][]{PapaJoe}
+
+
+
+\section{CUDA}
