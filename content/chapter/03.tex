@@ -27,7 +27,7 @@ Es gibt oft Probleme, bei denen nicht genau bestimmt werden kann, ob etwas richt
 Das Ziel des Roboters ist es eine geeignete Lösung bzw. Strategie für das Problem zu finden. Beim Bestärkten Lernen ist oft die Rede von sogenannten Agenten, die für eine Lösung eines Problems trainiert werden. Bei der Suche nach einer geeigneten Strategie, werden diese kontinuierlich belohnt oder bestraft für gute und schlechte Aktionen. Ein einfaches Beispiel wäre ein Saugroboter,dieser saugt in einem Hotel die Zimmer. In den Zimmern, in welchen der Roboter z.B. nichts umgestoßen hat, wird er belohnt. Stößt der Roboter Dinge um, oder saugt etwas nicht gewolltes ein, so wird er bestraft. \cite[vgl.][]{Frochte2020} Das Belohnungssystem kann auf Punkten basieren, so würde der Saugroboter im positiven Fall Pluspunkte und im negativen Fall Minuspunkte bekommen und anhand dessen seine Aktionen anpassen.
 
 \subsection{Künstliches Neuronales Netz (\acs{KNN})}
-Die Struktur und Funktion des menschlichen Gehirns ist das Vorbild der künstlichen Neuronalen Netze. Sie besitzen eine Vielzahl künstlicher Neuronen, die miteinander verbunden sind und Informationen verarbeiten. \acs{KNN}s werden für verschiedene Anwendungen eingesetzt, wie z.B. Mustererkennung, Datenanalyse oder Vorhersagen.
+Die Struktur und Funktion des menschlichen Gehirns ist das Vorbild der künstlichen Neuronalen Netze. Sie besitzen eine Vielzahl künstlicher Neuronen, die miteinander verbunden sind und Informationen verarbeiten. Ein \ac{KNN} wird für verschiedene Anwendungen eingesetzt, wie z.B. Mustererkennung, Datenanalyse oder Vorhersagen.
 
 \subsubsection{Biologisches Neuron}
 
@@ -64,7 +64,7 @@ Der klassische Aufbau eines Neuronalen Netzes besteht aus einer Eingabeschicht (
 Das Training eines Neuronalen Netzes ist ein wesentlicher Aspekt des Deep Learnings, bei welchem die Anpassungen der Gewichte und Schwellenwerte innerhalb des Netzwerks stattfinden. Das Training kann oft mehrere Stunden oder sogar Tage dauern, je nach Art und Menge der Daten. Ein Neuronales Netz gilt dann als trainiert, wenn es zu einem Eingabevektor $x$, einen geeigneten Ausgabevekotr $y$ zuverlässig bestimmen kann. Das Netz ist danach in der Lage für bisher ungesehene Eingabevektoren $x'$ ebenfalls passende Ausgabevektoren $y'$ zu zuordnen. \cite[vgl.][]{Scherer1997}
 
 Ein entscheidendes Konzept im Training ist die Fehler- oder Verlustfunktion (engl.: Loss), genauer beschrieben in Abschnitt \ref{subsec:AktivierungsfunktionenVerlust-FunktionenOptimierer}, welche den Unterschied der vorhergesagten Ausgaben mit den tatsächlichen Ergebnissen vergleicht und einen Fehler errechnet. Das Ziel des Trainings ist es, die Verlustfunktion auf ein Minimum zu reduzieren, indem die internen Parameter des Neuronalen Netzes angepasst werden. Die Parameter des Netzwerks werden zu Beginn des Trainings zufällig initialisiert und schrittweise im Training angepasst. \cite[vgl.][]{Choo2020}\\
-Die Rückwärtspropagierung (engl.: Backpropagation) ist ein weit verbreitetes Lernverfahren für Neuronale Netze, dass auf eben genannter Minimierung des Fehlers basiert. Für die Rückwärtspropagierung wird im Allgemeinen die Deltalernregel verwendet, die besagt, dass die Fehlerminimierung durch Änderung eines Gewichtes $w_ij$ einen Gradientenabstieg bezweckt. Der Ausgangspunkt für diese Lernregel ist wie folgt definiert: 
+Die Rückwärtspropagierung (engl.: Backpropagation) ist ein weit verbreitetes Lernverfahren für Neuronale Netze, dass auf eben genannter Minimierung des Fehlers basiert. Für die Rückwärtspropagierung wird im Allgemeinen die Deltalernregel verwendet, die besagt, dass die Fehlerminimierung durch Änderung eines Gewichtes $w_{ij}$ einen Gradientenabstieg bezweckt. Der Ausgangspunkt für diese Lernregel ist wie folgt definiert: 
 \begin{equation}
 	\Delta_{p}w_{ij} \equiv -\dfrac{dE_p}{dw_{ij}}
 \end{equation}
@@ -77,7 +77,7 @@ Im nächsten und letzten Schritt des Trainings, der Rückwärtspropagierung, wir
 	\label{eq:mse}
 	E = \dfrac{1}{2} \sum (Y_i - \hat{Y}_{i})^2
 \end{equation}
-Nach der Fehlerberechnung, werden die Fehler für die Neuronen der einzelnen Schichten ermittelt. Dabei wird der Beitrag eines jeden Neurons zum Gesamtfehler berechnet. Anschließend wird anhand des Fehlers eines Neurons die Gewichtung von diesem angepasst. Die Gewichte werden dabei mit einem konstanten Faktor $\nu$ und entsprechend des Fehlers mit einem weiteren Term multipliziert. Dieser Prozess wird iterativ wiederholt, bis der Fehler auf ein geeignetes Minimum reduziert wurde. \cite[vgl.][]{Scherer1997}
+Nach der Fehlerberechnung, werden die Fehler für die Neuronen der einzelnen Schichten ermittelt. Dabei wird der Beitrag eines jeden Neurons zum Gesamtfehler berechnet. Anschließend wird anhand des Fehlers eines Neurons die Gewichtung von diesem angepasst. Die Gewichte werden dabei mit einem konstanten Faktor $\nu$ und entsprechend des Fehlers mit einem weiteren Term multipliziert. Dieser Prozess wird iterativ wiederholt, bis der Fehler auf ein geeignetes Minimum reduziert wurde. Ist der Fehler auf einen minimalen Wert gesunken und verändert sich nicht mehr großartig, so spricht man davon, dass das \gls{Modell} konvergiert, und das Training beendet werden kann.\cite[vgl.][]{Scherer1997}
 
 
 
@@ -140,14 +140,14 @@ Der Filter wird schrittweise über das Eingabebild geschoben, wobei jedes Elemen
 	\label{eq:conv_result}
 \end{equation}
 
-Es gilt zu beachten, dass das Ergebnis in \ref{eq:conv_result} kleiner ist, als das Ursprungsbild. Dies liegt daran, dass kein ``Padding'' verwendet wurde, um die Ränder des Eingabebildes aufzufüllen. Die Größe der Ergebnismatrix lässt sich durch Gleichung \ref{eq:conv_size} berechnen, wobei $W$ die Eingabegröße des Bildes, $F$ die Filtergröße, $S$ der Stride und $P$ das Padding ist. \cite[vgl.][]{Teoh2023}
+Es gilt zu beachten, dass das Ergebnis in \ref{eq:conv_result} kleiner ist, als das Ursprungsbild. Dies liegt daran, dass keine Fülldaten (engl.: Padding) verwendet wurde, um die Ränder des Eingabebildes aufzufüllen. Die Größe der Ergebnismatrix lässt sich durch Gleichung \ref{eq:conv_size} berechnen, wobei $W$ die Eingabegröße des Bildes, $F$ die Filtergröße, $S$ der Stride und $P$ das Padding ist. \cite[vgl.][]{Teoh2023}
 
 \begin{equation}
 	W_{out}= \dfrac{W+2P-F}{S}+1
 	\label{eq:conv_size}
 \end{equation}
 
-\paragraph{Pooling-Layer} dient zur Extraktion von Merkmalen des Bildes, welche eine hohe semantische Bedeutung haben. Die Eingaben dieser Schicht, sind die Ausgaben der vorangegangenen Faltungs-Schicht. Diese Schicht verwendet entweder das Maximal- oder Mittelwert-Pooling (engl.: Max- oder Average-Pooling). Dabei werden überflüssige und redundante Informationen aus der Datenmenge entfernt. Durch das Entfernen der unwesentlicher Bestandteile reduziert sich Berechnungszeit und die Merkmale werden verdichtet. 
+\paragraph{Pooling-Layer} dient zur Extraktion von Merkmalen (engl.: Features) des Bildes, welche eine hohe semantische Bedeutung haben. Die Eingaben dieser Schicht, sind die Ausgaben der vorangegangenen Faltungs-Schicht. Diese Schicht verwendet entweder das Maximal- oder Mittelwert-Pooling (engl.: Max- oder Average-Pooling). Dabei werden überflüssige und redundante Informationen aus der Datenmenge entfernt. Durch das Entfernen der unwesentlicher Bestandteile reduziert sich Berechnungszeit und die Merkmale werden verdichtet. 
 
 Beim Pooling wandert ebenfalls ein Filter, meist mit einer Größe von $2x2$, und einer Schrittweite von zwei über das Bild. In Abbildung \ref{fig:pooling} werden die zwei Arten des Poolings durchgeführt. Das Max-Pooling extrahiert jeweils den höchsten Wert welcher innerhalb der Filter-Matrix liegt. Das Average-Pooling nimmt jeweils den Mittelwert aller Elemente innerhalb der Filter-Matrix. Durch das Pooling verkleinert sich das Bild je nach Filtergröße und Schrittweite.\cite[vgl.][]{Teoh2023} Im Beispiel von Abbildung \ref{fig:pooling} verkleinert sich das Ausgangsbild um die Hälfte, die Größe nach dem Pooling berechnet sich ebenfalls mit der Formel aus \ref{eq:conv_size}.
 

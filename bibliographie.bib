@@ -74,6 +74,7 @@
 @WWW{MSModell,
   author  = {o.V.},
   date    = {12-30-2021},
+  title   = {Was ist ein Machine Learning Modell?},
   url     = {https://learn.microsoft.com/en-us/windows/ai/windows-ml/what-is-a-machine-learning-model},
   urldate = {2023-02-26},
 }
@@ -81,6 +82,7 @@
 @WWW{IBMSupervisedLearning,
   author  = {o.V.},
   date    = {o.J.},
+  title   = {Supervised Learning},
   url     = {https://www.ibm.com/de-de/topics/supervised-learning},
   urldate = {2023-02-26},
 }
@@ -368,6 +370,56 @@
   pages        = {533--536},
   volume       = {323},
   publisher    = {Springer Science and Business Media {LLC}},
+}
+
+@Book{Pfannstiel2022,
+  date      = {2022},
+  title     = {Künstliche Intelligenz im Gesundheitswesen},
+  doi       = {10.1007/978-3-658-33597-7},
+  editor    = {Mario A. Pfannstiel},
+  publisher = {Springer Fachmedien Wiesbaden},
+}
+
+@Misc{Bengio2012,
+  author    = {Bengio, Yoshua},
+  date      = {2012},
+  title     = {Practical recommendations for gradient-based training of deep architectures},
+  doi       = {10.48550/ARXIV.1206.5533},
+  copyright = {arXiv.org perpetual, non-exclusive license},
+  keywords  = {Machine Learning (cs.LG), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  publisher = {arXiv},
+}
+
+@Article{Yu2020,
+  author      = {Yu, Tong and Zhu, Hong},
+  date        = {2020-03-12},
+  title       = {Hyper-Parameter Optimization: A Review of Algorithms and Applications},
+  doi         = {10.48550/ARXIV.2003.05689},
+  eprint      = {2003.05689},
+  eprintclass = {cs.LG},
+  eprinttype  = {arXiv},
+  abstract    = {Since deep neural networks were developed, they have made huge contributions to everyday lives. Machine learning provides more rational advice than humans are capable of in almost every aspect of daily life. However, despite this achievement, the design and training of neural networks are still challenging and unpredictable procedures. To lower the technical thresholds for common users, automated hyper-parameter optimization (HPO) has become a popular topic in both academic and industrial areas. This paper provides a review of the most essential topics on HPO. The first section introduces the key hyper-parameters related to model training and structure, and discusses their importance and methods to define the value range. Then, the research focuses on major optimization algorithms and their applicability, covering their efficiency and accuracy especially for deep learning networks. This study next reviews major services and toolkits for HPO, comparing their support for state-of-the-art searching algorithms, feasibility with major deep learning frameworks, and extensibility for new modules designed by users. The paper concludes with problems that exist when HPO is applied to deep learning, a comparison between optimization algorithms, and prominent approaches for model evaluation with limited computational resources.},
+  copyright   = {arXiv.org perpetual, non-exclusive license},
+  file        = {:http\://arxiv.org/pdf/2003.05689v1:PDF},
+  keywords    = {Machine Learning (cs.LG), Machine Learning (stat.ML), FOS: Computer and information sciences},
+  publisher   = {arXiv},
+  year        = {2020},
+}
+
+@Article{Ioffe2015,
+  author      = {Ioffe, Sergey and Szegedy, Christian},
+  date        = {2015-02-11},
+  title       = {Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift},
+  doi         = {10.48550/ARXIV.1502.03167},
+  eprint      = {1502.03167},
+  eprintclass = {cs.LG},
+  eprinttype  = {arXiv},
+  abstract    = {Training Deep Neural Networks is complicated by the fact that the distribution of each layer's inputs changes during training, as the parameters of the previous layers change. This slows down the training by requiring lower learning rates and careful parameter initialization, and makes it notoriously hard to train models with saturating nonlinearities. We refer to this phenomenon as internal covariate shift, and address the problem by normalizing layer inputs. Our method draws its strength from making normalization a part of the model architecture and performing the normalization for each training mini-batch. Batch Normalization allows us to use much higher learning rates and be less careful about initialization. It also acts as a regularizer, in some cases eliminating the need for Dropout. Applied to a state-of-the-art image classification model, Batch Normalization achieves the same accuracy with 14 times fewer training steps, and beats the original model by a significant margin. Using an ensemble of batch-normalized networks, we improve upon the best published result on ImageNet classification: reaching 4.9% top-5 validation error (and 4.8% test error), exceeding the accuracy of human raters.},
+  copyright   = {arXiv.org perpetual, non-exclusive license},
+  file        = {:http\://arxiv.org/pdf/1502.03167v3:PDF},
+  keywords    = {Machine Learning (cs.LG), FOS: Computer and information sciences},
+  publisher   = {arXiv},
+  year        = {2015},
 }
 
 @Comment{jabref-meta: databaseType:biblatex;}
