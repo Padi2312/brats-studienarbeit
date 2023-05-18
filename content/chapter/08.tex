@@ -1,10 +1,40 @@
 %!TEX root = ../../main.tex
 \chapter{Experimente}
-Die Bewertung eines \glspl{Modell} ist ein wichtiger Schritt in der Entwicklung, um zu beurteilen ob das \gls{Modell} gute Leistungen erzielt. Es gibt verschieden Methoden bzw. Berechnungen, um die Leistungsfähigkeit zu untersuchen. Es werden nachfolgend verschiedene Metriken, sowie die Ergebnisse der \gls{Modell}e vorgestellt.
+In diesem Kapitel werden verschiedene Experimente durchgeführt, um die Auswirkungen von verschiedenen Parametern und Verarbeitungsschritten zu untersuchen. Insbesondere werden die Lernrate, Batch Größe und die Vorverarbeitung genauer untersucht. Jeder dieser Komponenten spielt eine wesentliche Rolle bei der letztendlichen Leistung des \gls{Modell}s. Bei der Untersuchung von Lernrate und Batch Größe werden verschiedene Werte getestet, um zu sehen wie der Trainingsprozess verläuft. Bei der Komponente Vorverarbeitung wird das Thema der Größenskalierung bzw. des Bildausschnitts eine Rolle spielen.\\
+Zunächst werden verschiedene Metriken vorgestellt, anhand derer man die Auswirkungen der verschiedenen Parameter mit beurteilen kann. Anschließend werden die einzelnen Experimente genauer erläutert und deren Ergebnisse präsentiert.
+
 \section{Metriken}
+Die Bewertung eines \gls{Modell}s ist ein wichtiger Schritt in der Entwicklung. Mit Metriken wird ein \gls{Modell} beurteilt und es wird die Leistung evaluiert. Es gibt verschieden Methoden bzw. Berechnungen, um die Leistungsfähigkeit zu untersuchen. Es werden nachfolgend verschiedene Metriken aufgezeigt, sowie deren Ergebnisse auf die jeweiligen \gls{Modell}e vorgestellt.
 Metriken sind bestimmte Funktionen, anhand derer die Leistung eines \glspl{Modell} bewertet werden kann. Sie berechnen die Übereinstimmung zwischen der Vorhersage und dem tatsächlichen Ergebnis. Abhängig von der Problemstellung sind eine oder mehrere geeignete Metriken auszuwählen. Eine einzelne Metrik reicht oft nicht aus für eine allumfassende Bewertung, deshalb werden meist mehrere Metriken betrachtet.
 \subsection{IoU}
 \subsection{DICE}
 \subsection{Accuracy}
+\section{Verschiedene Modelle}
+Nachfolgend werden die verschiedenen \glspl{Modell} beschrieben und benannt, sowie die Rahmenbedingungen der Experimente festgelegt. Die Datensatzgröße beträgt 25000 2D Bilder mit je einer Größe von 128x128 Pixeln. Die Vorverarbeitung beinhaltet das zusammenführen der vier Modalitäten, sowie ein Zuschneiden und Skalieren der einzelnen Bilder. Als Standardwerte für die jeweils nicht zu untersuchenden Parameter werden folgende Werte festgelegt:
+
+\begin{table}[h!]
+\begin{longtable}{|c|c|}
+	\hline
+		\multicolumn{1}{|c|}{\textbf{Komponente}} & \multicolumn{1}{c|}{\textbf{Wert}} \\
+		\endhead
+	\hline
+		Batch Größe & 32 \\
+	\hline
+		Lernrate & 0.01 \\
+	\hline
+		Anzahl der Filter & 64, 128, 256, 512 \\
+	\hline
+		Vorverarbeitung & Auschnitt und Skalierung des Bildes \\
+	\hline
+		Optimierer & Adam \\
+	\hline
+		Verlustfunktion & Dice Loss \\
+	\hline
+\end{longtable}
+\caption{Standardwerte für das Training des Neuronalen Netzes}
+\end{table}
+
+
+
 \section{Diskussion der Ergebnisse}
 \section{Fehleranalyse und Verbesserungen}

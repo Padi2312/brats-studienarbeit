@@ -18,7 +18,7 @@ Der Encoder wird verwenden, um die Feature-Maps aus dem Bild zu extrahieren. Bei
 Im Decoder wird die komprimierte Eingabe wieder auf die ursprüngliche Bildgröße skaliert, auch ''Upsampling`` genannt. Dies geschieht durch eine Aneinanderreihung von Upsampling Schichten jeweils gefolgt von zweifach Faltungen und einer Aktivierungsfunktion. Nach jedem Upsampling der Feature-Maps folgt eine Faltung mit einem 2x2 Filter, welche die Anzahl der Feature-Maps jeweils halbiert. Hierbei findet zusätzlich eine Verkettung der Feature-Maps aus dem entsprechenden Encoder Abschnitt statt. Nach der 2x2-Faltung folgen jeweils immer zwei 3x3-Faltungen mit einer abschließenden ReLU Aktivierungsfunktion. Abschließend an den Decoder Abschnitt folgt noch eine Faltung mit einem 1x1 Filter, der die Features auf die gewünschte Anzahl von Klassen der Segmentierungsaufgabe abbildet. \cite[vgl.][]{Ronneberger2015}
 
 \subsection{Hyperparameter}
-Hyperparameter in neuronalen Netzwerken sind Parameter, deren Werte vor dem Training des Modells festgelegt und während des Trainings nicht angepasst werden bis auf gewisse Ausnahmen. Sie sind entscheidend für die Leistung des Modells und müssen sorgfältig ausgewählt werden. Die Auswahl der richtigen Hyperparameter ist oft eine Kunst und erfordert sowohl Erfahrung als auch experimentelles Ausprobieren. 
+Hyperparameter sind Parameter, deren Werte vor dem Training eines \gls{Modell}s festgelegt und während des Trainings, bis auf gewisse Ausnahmen nicht angepasst werden. Sie sind entscheidend für die Leistung des Modells und müssen sorgfältig ausgewählt werden. Die Auswahl der richtigen Hyperparameter ist oft eine Kunst und erfordert sowohl Erfahrung als auch experimentelles Ausprobieren. 
 
 In der Praxis wird häufig eine Technik namens Hyperparametersuche oder -optimierung verwendet, bei der verschiedene Kombinationen von Hyperparametern systematisch ausprobiert werden, um diejenige zu finden, die die beste Leistung liefert. In diesem Abschnitt werden die wichtigsten Hyperparameter, die bei der Entwicklung des eines Deep Learning \glspl{Modell} relevant sind genauer beschrieben.
 
@@ -52,11 +52,28 @@ Hierfür wird in der Regel der Mittelwert und die Standardabweichung für jedes 
 PyTorch stellt bereits eine Batch Normalisierungs Schicht zur Verfügung, die für die Normalisierung der Batches verwendet werden kann. Diese Schicht wird nach jeder Faltung und noch vor der Aktivierungsfunktion angewendet.
 
 \subsection{Verlustfunktion}
+Die Auswahl der richtigen Verlustfunktion ist entscheidend für den Erfolg eines Neuronalen Netz. Bei der Klassifizierung von medizinischen Bilddaten, gibt es einige Herausforderungen, die eine spezielle Auswahl der Verlustfunktion erfordern.\\
+Die Kreuzentropie (engl.: Cross Entropy) ist eine gängige Wahl für die Verlustfunktion bei Klassifizierungsproblemen. Sie misst, wie gut die geschätzte Wahrscheinlichkeitsverteilung des Modells mit der tatsächlichen Verteilung der Daten übereinstimmt. Wenn die Vorhersage des Modells genau mit den tatsächlichen Klassen übereinstimmt, ist der Cross-Entropy-Verlust Null. Wenn die Vorhersage jedoch weit von der tatsächlichen Klasse entfernt ist, steigt der Verlust exponentiell an. \cite[vgl.][]{Murphy2012}\\
+Obwohl die Kreuzentropie in den meisten Fällen recht effektiv ist, kommt diese insbesondere bei der Segmentierung von medizinischen Bildern an ihre Grenzen. Eines der Hauptprobleme ist, dass die Kreuzentropie Pixelweise berechnet wird und somit kein globales Verständnis für die räumliche Struktur des Bildes hat. Bei der Segmentierung von Gehirntumoren ist es jedoch wichtig auch benachbarte Pixel zu betrachten, um so die räumliche Struktur im Blick zu behalten. \\
+Ein anderes Problem ist das Ungleichgewicht der verschiedenen Klassen. Die zu segmentierenden Tumore sind meist wesentlich kleiner als das gesamte Bild, was zur ungleichen Verteilung von Tumor- und Hintergrundklassen führt. Aufgrund dessen ist die Kreuzentropie stark beeinflusst durch die Hintergrundelement und fällt damit schnell gegen Null. \cite[][]{Yeung2021}\\
+Aus diesen Gründen wird häufig eine weitere Verlustfunktion hinzugezogen. Eine der verbreitetsten Verlustfunktionen für die Segmentierung ist der Dice Loss. Dieser ist eine regionsabhängige Verlustfunktion, welcher auch die räumliche Struktur des Bildes für die Minimierung des Fehlers berücksichtigt. Der Dice Loss basiert auf dem Dice-Koeffizienten oder der Sørensen-Dice-Ähnlichkeit, einer Metrik zur quantitativen Bewertung der Ähnlichkeit zwischen zwei Mengen. Der Dice-Koeffizient wird definiert als das Verhältnis des doppelten Schnitts der beiden Mengen zum Gesamtvolumen der Mengen
+\begin{equation}
+	DSC={\frac {2|X\cap Y|}{|X|+|Y|}}
+\end{equation}
+Betrachtet man den Dice-Koeffizient mit boolschen Daten, also nur mit richtig oder falsch, so kann dieser auch mit 
+\begin{equation}
+	DSC={\frac {2TP}{2TP+FP+FN}}
+\end{equation}
+dargestellt werden. Im Kontext der Bildsegmentierung wird der Dice-Koeffizient verwendet, um die Ähnlichkeit zwischen der vorhergesagten Segmentierung und der tatsächlichen Ground-Truth-Segmentierung zu messen. \cite[vgl.][]{Sudre2017}
+
 
 
 \subsection{Probleme bei der Entwicklung}
-% VRAM speicherplatz größe
-% Schlechte Hardware
-% CE Loss geht nicht
+Bei der Entwicklung von Deep Learning \gls{Modell}en für medizinische Bildsegmentierung können unterschiedliche Probleme auftreten, die durch verschiedene Faktoren verursacht werden. Eines der häufigsten Probleme bei der Entwicklung ist der Mangel an Grafikkartenspeicher. Aufgrund der  Bildgröße der \ac{MRT} Scans passen relativ wenige Bilder in den Speicher der Grafikkarte. Behält man die Dimension der ursprünglichen Bilder bei, so würde nur eine sehr geringe Größe für eine Batch funktionieren, ohne den Speicher zu überfüllen. \\
+Die Bilder wurden daher wie in Abschnitt \ref{subsec:Vorverarbeitung} beschrieben, in 2D Bilder konvertiert und auf eine kleinere Bildgröße skaliert. Aufgrund der Konvertierung von 3D zu 2D kann nun eine deutlich Größe Anzahl an Bildern pro Batch verwendet werden, um das \gls{Modell} zu trainieren.\\
+Ein weiteres Problem, ist das Fehlen von leistungsstarker Hardware für schnellere Berechnungen. Die Hardware welche für das Training von Deep Learning \gls{Modell}en verwendet wird ist häufig sehr kostenintensiv und benötigt eine Menge Strom. Die verwendete Grafikkarte bei der Entwicklung ist daher lediglich eine Consumer Grafikkarte, welche für das Training von vergleichsweise kleinen \gls{Modell}en geeignet ist.
 
 \subsection{Training}
+Bevor ein Neuronales Netz trainiert werden kann, muss gewährleistet sein, dass die Daten ausreichend vorverarbeitet wurden und somit geeignet sind für das Training. Sind die Daten in einer geeigneten Form, kann das Training beginnen. Das Training eines Netzes verläuft über mehrere Epochen und kann eine Menge Zeit in Anspruch nehmen. Bei jeder Epoche werden alle Bilder des Trainingsdatensatz einmal durch das Netzwerk gegeben und anschließend die Leistung mittels eines Validierungsdatensatzes gemessen. Dieser Prozess wird für eine vorher ausgewählte Anzahl an Epochen durchgeführt.\\
+Der Prozess beginnt mit der Initialisierung des \gls{Modell}s, bei welchem alle internen Parameter auf einen zufälligen Wert gesetzt und im Verlauf des Trainings angepasst werden. Anschließend werden die Trainingsdaten in Form von \glspl{Batch} durch das Netzwerk gereicht, auch Feedforward genannt. Bei diesem Teil, werden verschiedenen Berechnungen innerhalb des Netzes ausgeführt, um eine Vorhersage bzw. Segmentierung für die Daten zu erstellen.\\
+Nachdem eine \gls{Batch} durch das Netzwerk gereicht wurde und die Segmentierungen erstellt wurden, wird der Fehler berechnet. Dieser sagt aus, wie weit die Ausgaben des Netzes mit dem tatsächlichen Ergebnissen auseinander liegen. Anhand dieses Fehlers werden dann im nächsten Schritt die Parameter innerhalb des \gls{Modell}s angepasst. Mithilfe der Rückwärtspropagierung werden die Fehler eines jeden Neurons zum Gesamtfehler berechnet. Anhand dessen können die Gewichte und Bias eines jeden Neuron optimiert werden. \cite[vgl.][]{Goodfellow2016}
