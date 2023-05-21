@@ -1,17 +1,40 @@
 %!TEX root = ../../main.tex
 \chapter{Experimente}
-In diesem Kapitel werden verschiedene Experimente durchgeführt, um die Auswirkungen von verschiedenen Parametern und Verarbeitungsschritten zu untersuchen. Insbesondere werden die Lernrate, Batch Größe und die Vorverarbeitung genauer untersucht. Jeder dieser Komponenten spielt eine wesentliche Rolle bei der letztendlichen Leistung des \gls{Modell}s. Bei der Untersuchung von Lernrate und Batch Größe werden verschiedene Werte getestet, um zu sehen wie der Trainingsprozess verläuft. Bei der Komponente Vorverarbeitung wird das Thema der Größenskalierung bzw. des Bildausschnitts eine Rolle spielen.\\
+In diesem Kapitel werden verschiedene Experimente durchgeführt, um die Auswirkungen von verschiedenen Parametern und Verarbeitungsschritten zu untersuchen. Insbesondere werden die Lernrate, Batch Größe und die Vorverarbeitung genauer untersucht. Jeder dieser Komponenten spielt eine wesentliche Rolle bei dem Training des \gls{Modell}s. Bei der Untersuchung von Lernrate und Batch Größe werden verschiedene Werte getestet, um zu sehen wie der Trainingsprozess verläuft. Bei der Komponente Vorverarbeitung wird das Thema der Größenskalierung bzw. des Bildausschnitts eine Rolle spielen.\\
 Zunächst werden verschiedene Metriken vorgestellt, anhand derer man die Auswirkungen der verschiedenen Parameter mit beurteilen kann. Anschließend werden die einzelnen Experimente genauer erläutert und deren Ergebnisse präsentiert.
 
 \section{Metriken}
 Die Bewertung eines \gls{Modell}s ist ein wichtiger Schritt in der Entwicklung. Mit Metriken wird ein \gls{Modell} beurteilt und es wird die Leistung evaluiert. Es gibt verschieden Methoden bzw. Berechnungen, um die Leistungsfähigkeit zu untersuchen. Es werden nachfolgend verschiedene Metriken aufgezeigt, sowie deren Ergebnisse auf die jeweiligen \gls{Modell}e vorgestellt.
 Metriken sind bestimmte Funktionen, anhand derer die Leistung eines \glspl{Modell} bewertet werden kann. Sie berechnen die Übereinstimmung zwischen der Vorhersage und dem tatsächlichen Ergebnis. Abhängig von der Problemstellung sind eine oder mehrere geeignete Metriken auszuwählen. Eine einzelne Metrik reicht oft nicht aus für eine allumfassende Bewertung, deshalb werden meist mehrere Metriken betrachtet.
-\subsection{IoU}
-\subsection{DICE}
-\subsection{Accuracy}
-\section{Verschiedene Modelle}
-Nachfolgend werden die verschiedenen \glspl{Modell} beschrieben und benannt, sowie die Rahmenbedingungen der Experimente festgelegt. Die Datensatzgröße beträgt 25000 2D Bilder mit je einer Größe von 128x128 Pixeln. Die Vorverarbeitung beinhaltet das zusammenführen der vier Modalitäten, sowie ein Zuschneiden und Skalieren der einzelnen Bilder. Als Standardwerte für die jeweils nicht zu untersuchenden Parameter werden folgende Werte festgelegt:
+\subsection{Jaccard-Index}
+Der Jaccard-Index, auch Intersection over Union genannt, ist eine Metrik für die Bewertung der Ähnlichkeit oder Überlappung zweier Mengen $A$ und $B$. Der Jaccard-Index misst das Verhältnis der Schnittmenge beider Mengen zur Vereinigung dieser. In Bezug auf Bildsegmentierung bedeutet dies, dass der Jaccard-Index das Verhältnis des Bereichs des gemeinsamen Segments zum Bereich der vereinigten Segmente misst. Der Jaccard-Index kann einen Wert zwischen 0 und 1 haben, wobei 0 für keine Überlappung und 1 für perfekte Übereinstimmung steht. Mathematisch wird der Jaccard-Index wie folgt berechnet: \cite[vgl.][]{GarciaGarcia2017}
+\begin{equation}
+	J(A,B) =  \dfrac{\vert A \cup B\vert }{\vert A \cap B\vert}
+\end{equation} 
 
+\subsection{Dice-Koeffizient}
+\label{subsec:DiceKoeffizient}
+Der Dice-Koeffizient, auch als Sørensen-Dice-Koeffizient oder F1-Score bekannt, misst ebenfalls die Ähnlichkeit zwischen zwei Mengen oder Segmentierungen $A$ und $B$. Der Dice-Koeffizient berechnet das Verhältnis des doppelten der Schnittmenge zur Summe der Größe beider Mengen. In Bezug auf Bildsegmentierung misst der Dice-Koeffizient das Verhältnis der doppelten Fläche des gemeinsamen Segments zur Summe der Flächen beider Segmente. Wie der Jaccard-Index kann auch der Dice-Koeffizient Werte zwischen 0 und 1 annehmen, wobei 0 für keine Überlappung und 1 für perfekte Übereinstimmung steht. Mathematisch wird der Dice-Koeffizient wie folgt berechnet:
+\begin{equation}
+	DSC(A,B) =  \dfrac{2 \vert A \cup B\vert }{\vert A \vert + \vert B\vert}
+\end{equation} 
+Alternativ kann der Dice-Koeffizient auch mittels boolschen Daten dargestellt werden:
+\begin{equation}
+	DSC={\frac {2TP}{2TP+FP+FN}}
+\end{equation}
+''True Positive`` (TP) enthält die Anzahl der korrekt als positiv segmentierten Pixel, die tatsächlich zur gewünschten Klasse gehören. ''False Positive``(FP) gibt die Anzahl der fälschlicherweise als positiv segmentierten Pixel, die tatsächlich nicht zur gewünschten Klasse gehören. ``False Negative'' (FP) hingegen beinhaltet die Anzahl der Pixel die tatsächlich zur gewünschten Klasse gehören, aber fälschlicherweise als negativ segmentiert wurden. \cite[vgl.][]{Dice1945}
+
+
+\subsection{Pixel Accuracy}
+Pixelgenauigkeit, auch als Pixel Accuracy bezeichnet, ist eine Bewertungsmetrik, die häufig im Bereich der Computer Vision und der Bildsegmentierung verwendet wird. Sie misst den Prozentsatz der korrekt klassifizierten Pixel in einem Bild oder einer Gruppe von Bildern.
+Die Pixelgenauigkeit wird berechnet, indem die vorhergesagten Labels jedes Pixels im Bild mit den Ground-Truth-Labels verglichen werden. Wenn das vorhergesagte Label mit dem Ground-Truth-Label für einen Pixel übereinstimmt, wird dies als korrekte Klassifikation betrachtet. Die Pixelgenauigkeit wird dann bestimmt, indem die Gesamtzahl der korrekt klassifizierten Pixel durch die Gesamtzahl der Pixel im Bild geteilt wird:
+\begin{equation}
+	PA = \dfrac{\sum_{i=0}^{k} p_{ii}}{\sum_{i=0}^{k} \sum_{j=0}^{k} p_{ij}}
+\end{equation}
+Hierbei sind alle $p_{ii}$ als True Positive anzusehen und alle $p_{ij}$ als False Positive bzw. False Negative. \cite[vgl.][]{Hurtado2022}
+
+\section{Beschreibung Experimente}
+Nachfolgend werden die verschiedenen Experimente bzw. \glspl{Modell} beschrieben, sowie die Rahmenbedingungen festgelegt. Der verwendete Datensatz enthält 25000 2D Bilder mit einer Größe von je 128x128 Pixeln. Die Vorverarbeitung beinhaltet das zusammenführen der vier Modalitäten, sowie ein Zuschneiden und Skalieren der einzelnen Bilder. Als Standardwerte für die jeweils nicht zu untersuchenden Parameter werden folgende Werte festgelegt:
 \begin{table}[h!]
 \begin{longtable}{|c|c|}
 	\hline
@@ -33,6 +56,17 @@ Nachfolgend werden die verschiedenen \glspl{Modell} beschrieben und benannt, sow
 \end{longtable}
 \caption{Standardwerte für das Training des Neuronalen Netzes}
 \end{table}
+
+\subsection{1. Experiment - Lernrate}
+Der erste Parameter welcher Untersucht wird ist die Lernrate. Diese bestimmt wie stark die internen Parameter des \gls{Modell}s angepasst werden. Eine sehr hohe Lernrate kann dazuführen, dass wichtige Minima der Verlustfunktion übersprungen werden, wohingegen eine zu kleine Lernrate nur sehr langsam konvergiert. Nachfolgend wurde das Neuronale Netz mit verschiedenen Lernraten trainiert und dabei das Training sowie die abschließende Evaluation betrachtet. Die Lernrate wurde in diesem Experiment, ausgehend vm Standardwert $0.01$, immer um den Faktor $1\cdot 10^{-1}$ verkleinert, sodass sich die Lernraten $0.001$ und $0.0001$ für das Experiment ergeben.
+
+
+
+
+
+
+\subsection{2. Experiment - Batch Größe}
+\subsection{3. Experiment - Vorverarbeitung}
 
 
 

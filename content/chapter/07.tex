@@ -38,11 +38,11 @@ Die Implementierung des \gls{Modell}s für die Segmentierung der Gehirntumore er
 \subsubsection{Padding}
 Aufgrund der Faltungen innerhalb des Netzes reduziert sich die Bildgröße, da keine Fülldaten verwendet werden. Um dem entgegenzuwirken, aus Gründen der besseren Implementierung, wird an jeden Rand des Bildes eine Bestimmte Anzahl von Pixeln hinzugefügt. Da die Bildgröße bekannt ist aufgrund der gegebenen Architektur (siehe Abschnitt \ref{paragraph:GrößenSkalierung}), kann für die Berechnung der Füllmenge $P$ die Formel \ref{eq:conv_size} verwendet werden. Die Bildgröße $W$ ist definiert durch ein vielfaches von $2^N$, wobei $N$ die Anzahl der Downsampling Schichten beschreibt. Im konkreten Fall ist $N=4$ und die Eingabegröße der Bilder ist 128x128 Pixel, was ein vielfaches von $2^N=2^4=16$ ist. Die Schrittweite $S$ und Filtergröße $F$ sind bereits durch den Aufbau des U-Net mit $S=1$ und $F=3$ gegeben. Daraus ergibt sich die Füllmenge mit Formel \ref{eq:conv_size}:
 \begin{equation}
-	P = \dfrac{W \times S - 1 - W + F}{2}
+	P = \dfrac{W \cdot S - 1 - W + F}{2}
 \end{equation}
 
 \begin{equation}
-	P = \dfrac{2^N \times 1 - 1 - 2^N + 3}{2}  = 1
+	P = \dfrac{2^N \cdot 1 - 1 - 2^N + 3}{2}  = 1
 \end{equation}
 Durch das Beibehalten der Eingabegröße, ist die Implementierung aufgrund der einfachen Berechnung der Bildgröße für jede Schicht sehr von Vorteil. 
 
@@ -53,20 +53,15 @@ PyTorch stellt bereits eine Batch Normalisierungs Schicht zur Verfügung, die f�
 
 \subsection{Verlustfunktion}
 Die Auswahl der richtigen Verlustfunktion ist entscheidend für den Erfolg eines Neuronalen Netz. Bei der Klassifizierung von medizinischen Bilddaten, gibt es einige Herausforderungen, die eine spezielle Auswahl der Verlustfunktion erfordern.\\
-Die Kreuzentropie (engl.: Cross Entropy) ist eine gängige Wahl für die Verlustfunktion bei Klassifizierungsproblemen. Sie misst, wie gut die geschätzte Wahrscheinlichkeitsverteilung des Modells mit der tatsächlichen Verteilung der Daten übereinstimmt. Wenn die Vorhersage des Modells genau mit den tatsächlichen Klassen übereinstimmt, ist der Cross-Entropy-Verlust Null. Wenn die Vorhersage jedoch weit von der tatsächlichen Klasse entfernt ist, steigt der Verlust exponentiell an. \cite[vgl.][]{Murphy2012}\\
+Die Kreuzentropie (engl.: Cross Entropy) ist eine gängige Wahl für die Verlustfunktion bei Klassifizierungsproblemen. Sie misst, wie gut die geschätzte Wahrscheinlichkeitsverteilung des Modells mit der tatsächlichen Verteilung der Daten übereinstimmt. Wenn die Vorhersage des Modells genau mit den tatsächlichen Klassen übereinstimmt, ist die Kreuzentropie Null. Wenn die Vorhersage jedoch weit von der tatsächlichen Klasse entfernt ist, steigt der Verlust exponentiell an. \cite[vgl.][]{Murphy2012}\\
 Obwohl die Kreuzentropie in den meisten Fällen recht effektiv ist, kommt diese insbesondere bei der Segmentierung von medizinischen Bildern an ihre Grenzen. Eines der Hauptprobleme ist, dass die Kreuzentropie Pixelweise berechnet wird und somit kein globales Verständnis für die räumliche Struktur des Bildes hat. Bei der Segmentierung von Gehirntumoren ist es jedoch wichtig auch benachbarte Pixel zu betrachten, um so die räumliche Struktur im Blick zu behalten. \\
 Ein anderes Problem ist das Ungleichgewicht der verschiedenen Klassen. Die zu segmentierenden Tumore sind meist wesentlich kleiner als das gesamte Bild, was zur ungleichen Verteilung von Tumor- und Hintergrundklassen führt. Aufgrund dessen ist die Kreuzentropie stark beeinflusst durch die Hintergrundelement und fällt damit schnell gegen Null. \cite[][]{Yeung2021}\\
-Aus diesen Gründen wird häufig eine weitere Verlustfunktion hinzugezogen. Eine der verbreitetsten Verlustfunktionen für die Segmentierung ist der Dice Loss. Dieser ist eine regionsabhängige Verlustfunktion, welcher auch die räumliche Struktur des Bildes für die Minimierung des Fehlers berücksichtigt. Der Dice Loss basiert auf dem Dice-Koeffizienten oder der Sørensen-Dice-Ähnlichkeit, einer Metrik zur quantitativen Bewertung der Ähnlichkeit zwischen zwei Mengen. Der Dice-Koeffizient wird definiert als das Verhältnis des doppelten Schnitts der beiden Mengen zum Gesamtvolumen der Mengen
+Aus diesen Gründen wird häufig eine weitere Verlustfunktion hinzugezogen. Eine der verbreitetsten Verlustfunktionen für die Segmentierung ist der Dice Loss. Dieser ist eine regionsabhängige Verlustfunktion, welcher auch die räumliche Struktur des Bildes für die Minimierung des Fehlers berücksichtigt. Der Dice Loss basiert auf dem Dice-Koeffizienten oder auch Sørensen-Dice-Koeffizient, einer Metrik zur quantitativen Bewertung der Ähnlichkeit zwischen zwei Mengen, welcher in Abschnitt \ref{subsec:DiceKoeffizient} genauer beschrieben wird. 
+Im Kontext der Bildsegmentierung wird der Dice-Koeffizient verwendet, um die Ähnlichkeit zwischen der vorhergesagten Segmentierung und der tatsächlichen Ground-Truth-Segmentierung zu messen. Der Dice-Koeffizient kann als Verlustfunktion dargestellt werden durch 
 \begin{equation}
-	DSC={\frac {2|X\cap Y|}{|X|+|Y|}}
+  1 - DSC(A,B)
 \end{equation}
-Betrachtet man den Dice-Koeffizient mit boolschen Daten, also nur mit richtig oder falsch, so kann dieser auch mit 
-\begin{equation}
-	DSC={\frac {2TP}{2TP+FP+FN}}
-\end{equation}
-dargestellt werden. Im Kontext der Bildsegmentierung wird der Dice-Koeffizient verwendet, um die Ähnlichkeit zwischen der vorhergesagten Segmentierung und der tatsächlichen Ground-Truth-Segmentierung zu messen. \cite[vgl.][]{Sudre2017}
-
-
+oder alternativ auch durch den negative Wert des Dice-Koeffizient.  \cite[vgl.][]{Sudre2017}
 
 \subsection{Probleme bei der Entwicklung}
 Bei der Entwicklung von Deep Learning \gls{Modell}en für medizinische Bildsegmentierung können unterschiedliche Probleme auftreten, die durch verschiedene Faktoren verursacht werden. Eines der häufigsten Probleme bei der Entwicklung ist der Mangel an Grafikkartenspeicher. Aufgrund der  Bildgröße der \ac{MRT} Scans passen relativ wenige Bilder in den Speicher der Grafikkarte. Behält man die Dimension der ursprünglichen Bilder bei, so würde nur eine sehr geringe Größe für eine Batch funktionieren, ohne den Speicher zu überfüllen. \\
@@ -74,6 +69,7 @@ Die Bilder wurden daher wie in Abschnitt \ref{subsec:Vorverarbeitung} beschriebe
 Ein weiteres Problem, ist das Fehlen von leistungsstarker Hardware für schnellere Berechnungen. Die Hardware welche für das Training von Deep Learning \gls{Modell}en verwendet wird ist häufig sehr kostenintensiv und benötigt eine Menge Strom. Die verwendete Grafikkarte bei der Entwicklung ist daher lediglich eine Consumer Grafikkarte, welche für das Training von vergleichsweise kleinen \gls{Modell}en geeignet ist.
 
 \subsection{Training}
-Bevor ein Neuronales Netz trainiert werden kann, muss gewährleistet sein, dass die Daten ausreichend vorverarbeitet wurden und somit geeignet sind für das Training. Sind die Daten in einer geeigneten Form, kann das Training beginnen. Das Training eines Netzes verläuft über mehrere Epochen und kann eine Menge Zeit in Anspruch nehmen. Bei jeder Epoche werden alle Bilder des Trainingsdatensatz einmal durch das Netzwerk gegeben und anschließend die Leistung mittels eines Validierungsdatensatzes gemessen. Dieser Prozess wird für eine vorher ausgewählte Anzahl an Epochen durchgeführt.\\
+Bevor ein Neuronales Netz trainiert werden kann, muss gewährleistet sein, dass die Daten ausreichend vorverarbeitet wurden und somit geeignet sind für das Training. Sind die Daten in einer geeigneten Form, kann das Training beginnen. Das Training eines Netzes verläuft über mehrere Epochen und kann eine Menge Zeit in Anspruch nehmen. Bei jeder Epoche werden alle Bilder des Trainingsdatensatz einmal durch das Netzwerk gegeben und anschließend die Leistung mittels eines Validierungsdatensatzes gemessen. Dieser Prozess wird für eine vorher ausgewählte Anzahl an Epochen durchgeführt.
+
 Der Prozess beginnt mit der Initialisierung des \gls{Modell}s, bei welchem alle internen Parameter auf einen zufälligen Wert gesetzt und im Verlauf des Trainings angepasst werden. Anschließend werden die Trainingsdaten in Form von \glspl{Batch} durch das Netzwerk gereicht, auch Feedforward genannt. Bei diesem Teil, werden verschiedenen Berechnungen innerhalb des Netzes ausgeführt, um eine Vorhersage bzw. Segmentierung für die Daten zu erstellen.\\
 Nachdem eine \gls{Batch} durch das Netzwerk gereicht wurde und die Segmentierungen erstellt wurden, wird der Fehler berechnet. Dieser sagt aus, wie weit die Ausgaben des Netzes mit dem tatsächlichen Ergebnissen auseinander liegen. Anhand dieses Fehlers werden dann im nächsten Schritt die Parameter innerhalb des \gls{Modell}s angepasst. Mithilfe der Rückwärtspropagierung werden die Fehler eines jeden Neurons zum Gesamtfehler berechnet. Anhand dessen können die Gewichte und Bias eines jeden Neuron optimiert werden. \cite[vgl.][]{Goodfellow2016}
