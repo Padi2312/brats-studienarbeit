@@ -1,7 +1,7 @@
 %!TEX root = ../../main.tex
 \chapter{Experimente}
 In diesem Kapitel werden verschiedene Experimente durchgeführt, um die Auswirkungen von verschiedenen Parametern und Verarbeitungsschritten zu untersuchen. Insbesondere werden die Lernrate, Batch Größe und die Vorverarbeitung genauer untersucht. Jeder dieser Komponenten spielt eine wesentliche Rolle bei dem Training des \gls{Modell}s. Bei der Untersuchung von Lernrate und Batch Größe werden verschiedene Werte getestet, um zu sehen wie der Trainingsprozess verläuft. Bei der Komponente Vorverarbeitung wird das Thema der Größenskalierung bzw. des Bildausschnitts eine Rolle spielen.\\
-Zunächst werden verschiedene Metriken vorgestellt, anhand derer man die Auswirkungen der verschiedenen Parameter mit beurteilen kann. Anschließend werden die einzelnen Experimente genauer erläutert und deren Ergebnisse präsentiert.
+Zunächst werden verschiedene Metriken vorgestellt, anhand derer man die Auswirkungen der verschiedenen Parameter beurteilen kann. Anschließend werden die einzelnen Experimente genauer erläutert und deren Ergebnisse präsentiert.
 
 \section{Metriken}
 Die Bewertung eines \gls{Modell}s ist ein wichtiger Schritt in der Entwicklung. Mit Metriken wird ein \gls{Modell} beurteilt und es wird die Leistung evaluiert. Es gibt verschieden Methoden bzw. Berechnungen, um die Leistungsfähigkeit zu untersuchen. Es werden nachfolgend verschiedene Metriken aufgezeigt, sowie deren Ergebnisse auf die jeweiligen \gls{Modell}e vorgestellt.
@@ -58,16 +58,13 @@ Nachfolgend werden die verschiedenen Experimente bzw. \glspl{Modell} beschrieben
 \end{table}
 
 \subsection{1. Experiment - Lernrate}
-Der erste Parameter welcher Untersucht wird ist die Lernrate. Diese bestimmt wie stark die internen Parameter des \gls{Modell}s angepasst werden. Eine sehr hohe Lernrate kann dazuführen, dass wichtige Minima der Verlustfunktion übersprungen werden, wohingegen eine zu kleine Lernrate nur sehr langsam konvergiert. Nachfolgend wurde das Neuronale Netz mit verschiedenen Lernraten trainiert und dabei das Training sowie die abschließende Evaluation betrachtet. Die Lernrate wurde in diesem Experiment, ausgehend vm Standardwert $0.01$, immer um den Faktor $1\cdot 10^{-1}$ verkleinert, sodass sich die Lernraten $0.001$ und $0.0001$ für das Experiment ergeben.
-
-
-
-
-
+Der erste zu untersuchende Parameter ist die Lernrate. Sie bestimmt wie stark die Gewichte innerhalb des \gls{Modell}s angepasst werden. Eine sehr hohe Lernrate kann dazu führen, dass wichtige Minima der Verlustfunktion übersprungen werden, während eine zu kleine Lernrate nur sehr langsam konvergiert. Im Folgenden wurde das Neuronale Netz mit verschiedenen Lernraten trainiert, wobei sowohl das Training als auch die abschließende Evaluation betrachtet. Die Lernrate wurde in diesem Versuch, ausgehend vom Standardwert $0.01$, jeweils einmal um den Faktor $1\cdot 10^{-1}$ verkleinert und vergrößert, so dass für das Experiment die Lernraten $0.1$ und $0.0001$ ergeben.
 
 \subsection{2. Experiment - Batch Größe}
-\subsection{3. Experiment - Vorverarbeitung}
+Der zweite Parameter ist die Batch Größe, welche angibt nach wie vielen Trainingsbeispielen die internen Parameter angepasst werden. Es wird untersucht, wie sich das Trainingsverhalten und die endgültige Leistung des \gls{Modell}s in Abhängigkeit der Batch Größe unterscheiden. Die zu untersuchenden Werte ergeben sich aus dem Standardwert, indem dieser einmal halbiert und einmal verdoppelt wird. Daraus ergeben sich somit die Batch Größen von $8$ und $64$.
 
+\subsection{3. Experiment - Vorverarbeitung}
+Das letzte Experiment untersucht keinen Hyperparameter, sondern die Auswirkungen der Vorverarbeitungen auf die Leistung des \gls{Modell}s. Wie bereits in Abschnitt \ref{paragraph:GrößenSkalierung} erwähnt, müssen die Eingaben für das U-Net eine bestimmte Größe aufweisen, damit diese verarbeitet werden können. Die Größe der Bilder kann auf unterschiedliche Weise in die gewünschte Eingabegröße gebracht werden. Eine der Methoden ist eine einfache Skalierung von der Originalgröße auf die Zielgröße, dabei kommt es zu Verlusten der Bildqualität, da umliegende Pixel bzw. dessen Farbwerte miteinander verrechnet werden. Die zweite Methode, welche genauer in Abschnitt \ref{paragraph:GrößenSkalierung} beschrieben wurde, besteht darin zunächst die nicht relevanten Teile des Bildes zu entfernen und anschließend auf die gewünschte Zielgröße zu skalieren. Durch diese Methode ist enthält das Bild weniger irrelevante Informationen und erfährt einen geringeren Qualitätsverlust. 
 
 
 \section{Diskussion der Ergebnisse}
