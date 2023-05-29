@@ -61,7 +61,9 @@ Im Kontext der Bildsegmentierung wird der Dice-Koeffizient verwendet, um die Äh
 \begin{equation}
   1 - DSC(A,B)
 \end{equation}
-oder alternativ auch durch den negative Wert des Dice-Koeffizient.  \cite[vgl.][]{Sudre2017}
+oder alternativ auch durch den negative Wert des Dice-Koeffizient. \cite[vgl.][]{Sudre2017}\\
+
+Weiter besteht die Möglichkeit eine Kombination der beiden Verlustfunktionen zu verwenden. Bei dieser Methode bekommt jede der Funktionen eine Gewichtung zugeordnet, wie stark sie Einfluss auf den Verlust hat. Da Kreuzentropie allein nicht geeignet ist für die Segmentierung medizinischer Bilder, jedoch aber für die allgemeine Segmentierung, wird diese oft in Kombination mit dem Dice Loss verwendet. Durch die Verwendung des Dice Loss als zweite Verlustfunktion wird ebenfalls Wert auf die unausgeglichen Klassen gelegt und führt so zu besseren Ergebnissen. \cite[vgl.][]{Jadon2020}
 
 \subsection{Probleme bei der Entwicklung}
 Bei der Entwicklung von Deep Learning \gls{Modell}en für medizinische Bildsegmentierung können unterschiedliche Probleme auftreten, die durch verschiedene Faktoren verursacht werden. Eines der häufigsten Probleme bei der Entwicklung ist der Mangel an Grafikkartenspeicher. Aufgrund der  Bildgröße der \ac{MRT} Scans passen relativ wenige Bilder in den Speicher der Grafikkarte. Behält man die Dimension der ursprünglichen Bilder bei, so würde nur eine sehr geringe Größe für eine Batch funktionieren, ohne den Speicher zu überfüllen. \\

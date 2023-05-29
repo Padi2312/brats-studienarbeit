@@ -56,16 +56,73 @@ Nachfolgend werden die verschiedenen Experimente bzw. \glspl{Modell} beschrieben
 \end{longtable}
 \caption{Standardwerte für das Training des Neuronalen Netzes}
 \end{table}
+Die Auswertung der \glspl{Modell} erfolgt über die drei genannten Evaluierungsfunktionen. Die Ausgaben des Neuronalen Netzes werden zunächst mit Hilfe der Softmax-Funktion in den Wertebereich zwischen 0 und 1 überführt. Die neuen Werte stellen dabei eine Wahrscheinlichkeitsverteilung dar, wie bereits in Abschnitt \ref{subsec:AktivierungsfunktionenVerlust-FunktionenOptimierer} erwähnt. Anschließend werden diese Werte mit der Argmax-Funktion\footnote{Identifiziert die Kategorie mit dem höchsten Wert und gibt somit die Klassifizierung an} in die eigentlichen Tumorklassen überführt.
 
 \subsection{1. Experiment - Lernrate}
-Der erste zu untersuchende Parameter ist die Lernrate. Sie bestimmt wie stark die Gewichte innerhalb des \gls{Modell}s angepasst werden. Eine sehr hohe Lernrate kann dazu führen, dass wichtige Minima der Verlustfunktion übersprungen werden, während eine zu kleine Lernrate nur sehr langsam konvergiert. Im Folgenden wurde das Neuronale Netz mit verschiedenen Lernraten trainiert, wobei sowohl das Training als auch die abschließende Evaluation betrachtet. Die Lernrate wurde in diesem Versuch, ausgehend vom Standardwert $0.01$, jeweils einmal um den Faktor $1\cdot 10^{-1}$ verkleinert und vergrößert, so dass für das Experiment die Lernraten $0.1$ und $0.0001$ ergeben.
+Der erste zu untersuchende Parameter ist die Lernrate. Sie bestimmt wie stark die Gewichte innerhalb des \gls{Modell}s angepasst werden. Eine sehr hohe Lernrate kann dazu führen, dass wichtige Minima der Verlustfunktion übersprungen werden, während eine zu kleine Lernrate nur sehr langsam konvergiert. Im Folgenden wurde das Neuronale Netz mit verschiedenen Lernraten trainiert, wobei sowohl das Training als auch die abschließende Evaluation betrachtet. Die Lernrate wurde in diesem Versuch, ausgehend vom Standardwert $0.01$, jeweils einmal um den Faktor $1\cdot 10^{-1}$ verkleinert und vergrößert, so dass für das Experiment die Lernraten $0.1$ und $0.001$ ergeben.
+
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		& Dice & Jaccard Index & Pixel Accuracy \\
+		\hline
+		LR0.1	& 81,49 			& 79,45 			& 98,79 \\
+		\hline
+		Standard& 88,44 			& 85,85 			& 99,22  \\
+		\hline
+		\textbf{LR0.001}	& \textbf{90,32} 	&  \textbf{87,81}	& \textbf{99,33} \\
+		\hline
+	\end{tabular}
+	\caption{Ergebnisse des 1. Experiments mit der Lernrate in Prozent (Quelle: Eigene Darstellung)}
+\end{table}
 
 \subsection{2. Experiment - Batch Größe}
 Der zweite Parameter ist die Batch Größe, welche angibt nach wie vielen Trainingsbeispielen die internen Parameter angepasst werden. Es wird untersucht, wie sich das Trainingsverhalten und die endgültige Leistung des \gls{Modell}s in Abhängigkeit der Batch Größe unterscheiden. Die zu untersuchenden Werte ergeben sich aus dem Standardwert, indem dieser einmal halbiert und einmal verdoppelt wird. Daraus ergeben sich somit die Batch Größen von $8$ und $64$.
 
-\subsection{3. Experiment - Vorverarbeitung}
-Das letzte Experiment untersucht keinen Hyperparameter, sondern die Auswirkungen der Vorverarbeitungen auf die Leistung des \gls{Modell}s. Wie bereits in Abschnitt \ref{paragraph:GrößenSkalierung} erwähnt, müssen die Eingaben für das U-Net eine bestimmte Größe aufweisen, damit diese verarbeitet werden können. Die Größe der Bilder kann auf unterschiedliche Weise in die gewünschte Eingabegröße gebracht werden. Eine der Methoden ist eine einfache Skalierung von der Originalgröße auf die Zielgröße, dabei kommt es zu Verlusten der Bildqualität, da umliegende Pixel bzw. dessen Farbwerte miteinander verrechnet werden. Die zweite Methode, welche genauer in Abschnitt \ref{paragraph:GrößenSkalierung} beschrieben wurde, besteht darin zunächst die nicht relevanten Teile des Bildes zu entfernen und anschließend auf die gewünschte Zielgröße zu skalieren. Durch diese Methode ist enthält das Bild weniger irrelevante Informationen und erfährt einen geringeren Qualitätsverlust. 
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		& Dice & Jaccard Index & Pixel Accuracy \\
+		\hline
+		B8					& 83,03 			&81,08  			& 98,88 \\
+		\hline
+		\textbf{Standard}	& \textbf{88,44} 	& \textbf{85,85}  	& \textbf{99,22}  \\
+		\hline
+		B64					& 85,28  			& 82,66 			& 99,04 \\
+		\hline
+	\end{tabular}
+	\caption{Ergebnisse des 2. Experiments mit der Batch Größe in Prozent (Quelle: Eigene Darstellung)}
+\end{table}
 
+\subsection{3. Experiment - Vorverarbeitung}
+Das letzte Experiment untersucht keinen Hyperparameter, sondern die Auswirkungen der Vorverarbeitungen auf die Leistung des \gls{Modell}s. Wie bereits in Abschnitt \ref{paragraph:GrößenSkalierung} erwähnt, müssen die Eingaben für das U-Net eine bestimmte Größe aufweisen, damit diese verarbeitet werden können. Die Größe der Bilder kann auf unterschiedliche Weise in die gewünschte Eingabegröße gebracht werden. Eine der Methoden ist eine einfache Skalierung von der Originalgröße auf die Zielgröße, dabei kommt es zu Verlusten der Bildqualität, da umliegende Pixel bzw. dessen Farbwerte miteinander verrechnet werden. Die zweite Methode, welche genauer in Abschnitt \ref{paragraph:GrößenSkalierung} beschrieben wurde, besteht darin zunächst die nicht relevanten Teile des Bildes zu entfernen und anschließend auf die gewünschte Zielgröße zu skalieren. Durch diese Methode enthält das Bild weniger irrelevante Informationen und erfährt einen geringeren Qualitätsverlust. 
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		& Dice & Jaccard Index & Pixel Accuracy \\
+		\hline
+		\textbf{Standard}& \textbf{88,44} 	& \textbf{85,85}  	& \textbf{99,22}  \\
+		\hline
+		Scaled		& 81,43  	& 79,22 	& 98,80 \\
+		\hline
+	\end{tabular}
+	\caption{Ergebnisse des 2. Experiments mit der Batch Größe in Prozent (Quelle: Eigene Darstellung)}
+\end{table}
 
 \section{Diskussion der Ergebnisse}
+Im folgenden Abschnitt werden die Ergebnisse der Experiment genauer betrachtet. Sowohl wie Trainingsverläufe, als auch die Resultate der Evaluation des \gls{Modell}s, über den Testdatensatz, werden genauer beschrieben. Bei den Trainingsverläufen stellt immer die blaue Kurve das Referenzmodell mit den Standardwerten dar. Es wird dabei außerdem auf die Auswirkungen der verschiedenen Parameter, so wie die Aussagekraft der Metriken eingegangen. 
+
+\subsection{1. Experiment}
+Das erste Experiment untersuchte die Lernrate im Hinblick auf das Training und die Leistung des \gls{Modell}s. Die Lernrate ist einer der wichtigsten Hyperparameter den es beim Training zu konfigurieren gilt. Sie bestimmt, wie sehr die internen Gewichte angepasst werden. Zunächst wird der Verlauf des Trainings betrachtet, welcher in Anhang \ref{appendix:Experiment1Verlustkurven} zu sehen ist. Zuerst wird dabei auf den Verlust im Trainingsdatensatz eingegangen, welcher über 20 Epochen protokolliert wurde. Die grüne Kurve, welche das Modell ``LR0.1'' mit der Lernrate $0.1$ beschreibt, startet direkt von Anfang an mit weniger Verlust als das Referenzmodell, aber verringert diesen über die Zeit nur noch minimal. Möglicherweise werden hier wichtige Minima der Verlustfunktion übersprungen, weshalb das  Modell ``LR0.1'' hier einen relativ hohen Verlust hat.
+
+Im Vergleich dazu hat das Modell ``LR0.001'', die rote Kurve, mit einer Lernrate von $0.001$, zu Beginn einen höheren Verlust, welcher über ein einige Epochen so bleibt und dann schlagartig fällt. Der Verlust von Modell ``LR0.001'' unterschreitet den vom Referenzmodell und hat am Ende der 20 Epochen einen geringeren Verlust als ``Standard''. Durch die geringe Lernrate von Modell ``LR0.001'' sinkt der Verlust zu Beginn langsam, da die internen Parameter nur minimal angepasst werden. Auf Dauer führen diese kleinen Schritte jedoch zu einem besseren Ergebnis, da wichtige Minima der Verlustfunktion weniger, bis gar nicht übersprungen werden.
+
+Die Ergebnisse der Metriken unterstreichen den Verlauf des Trainings, so hat Modell ''LR0.001`` die beste Leistung erbracht. Ein Blick auf die Metriken ergibt einen Dice Koeeffizenten von über 90\% und einen Jaccard Index von 87.81\%, was recht gute Ergebnisse sind. Die Pixel Accuracy hingegen ist eher unaussagekräftig, da sich die Werte nur minimal mit unterscheiden mit einer Differenz von $0.73\%$.
+
+\subsection{2. Experiment}
+\subsection{3. Experiment}
+
 \section{Fehleranalyse und Verbesserungen}
