@@ -55,6 +55,7 @@ Nachfolgend werden die verschiedenen Experimente bzw. \glspl{Modell} beschrieben
 	\hline
 \end{longtable}
 \caption{Standardwerte für das Training des Neuronalen Netzes}
+\label{table:StandardWerte}
 \end{table}
 Die Auswertung der \glspl{Modell} erfolgt über die drei genannten Evaluierungsfunktionen. Die Ausgaben des Neuronalen Netzes werden zunächst mit Hilfe der Softmax-Funktion in den Wertebereich zwischen 0 und 1 überführt. Die neuen Werte stellen dabei eine Wahrscheinlichkeitsverteilung dar, wie bereits in Abschnitt \ref{subsec:AktivierungsfunktionenVerlust-FunktionenOptimierer} erwähnt. Anschließend werden diese Werte mit der Argmax-Funktion\footnote{Identifiziert die Kategorie mit dem höchsten Wert und gibt somit die Klassifizierung an} in die eigentlichen Tumorklassen überführt.
 
@@ -75,6 +76,7 @@ Der erste zu untersuchende Parameter ist die Lernrate. Sie bestimmt wie stark di
 		\hline
 	\end{tabular}
 	\caption{Ergebnisse des 1. Experiments mit der Lernrate in Prozent (Quelle: Eigene Darstellung)}
+		\label{table:1.ExperimentErgebnisse}
 \end{table}
 
 \subsection{2. Experiment - Batch Größe}
@@ -94,11 +96,14 @@ Der zweite Parameter ist die Batch Größe, welche angibt nach wie vielen Traini
 		\hline
 	\end{tabular}
 	\caption{Ergebnisse des 2. Experiments mit der Batch Größe in Prozent (Quelle: Eigene Darstellung)}
+	\label{table:2.ExperimentErgebnisse}
 \end{table}
 
 \subsection{3. Experiment - Vorverarbeitung}
+\label{subsec:3.Experiment-Vorverarbeitung}
 Das letzte Experiment untersucht keinen Hyperparameter, sondern die Auswirkungen der Vorverarbeitungen auf die Leistung des \gls{Modell}s. Wie bereits in Abschnitt \ref{paragraph:GrößenSkalierung} erwähnt, müssen die Eingaben für das U-Net eine bestimmte Größe aufweisen, damit diese verarbeitet werden können. Die Größe der Bilder kann auf unterschiedliche Weise in die gewünschte Eingabegröße gebracht werden. Eine der Methoden ist eine einfache Skalierung von der Originalgröße auf die Zielgröße, dabei kommt es zu Verlusten der Bildqualität, da umliegende Pixel bzw. dessen Farbwerte miteinander verrechnet werden. Die zweite Methode, welche genauer in Abschnitt \ref{paragraph:GrößenSkalierung} beschrieben wurde, besteht darin zunächst die nicht relevanten Teile des Bildes zu entfernen und anschließend auf die gewünschte Zielgröße zu skalieren. Durch diese Methode enthält das Bild weniger irrelevante Informationen und erfährt einen geringeren Qualitätsverlust. 
 \begin{table}[!h]
+
 	\centering
 	\begin{tabular}{|c|c|c|c|}
 		\hline
@@ -110,19 +115,36 @@ Das letzte Experiment untersucht keinen Hyperparameter, sondern die Auswirkungen
 		\hline
 	\end{tabular}
 	\caption{Ergebnisse des 2. Experiments mit der Batch Größe in Prozent (Quelle: Eigene Darstellung)}
+	\label{table:3.ExperimentErgebnisse}
 \end{table}
 
 \section{Diskussion der Ergebnisse}
-Im folgenden Abschnitt werden die Ergebnisse der Experiment genauer betrachtet. Sowohl wie Trainingsverläufe, als auch die Resultate der Evaluation des \gls{Modell}s, über den Testdatensatz, werden genauer beschrieben. Bei den Trainingsverläufen stellt immer die blaue Kurve das Referenzmodell mit den Standardwerten dar. Es wird dabei außerdem auf die Auswirkungen der verschiedenen Parameter, so wie die Aussagekraft der Metriken eingegangen. 
+Im folgenden Abschnitt werden die Ergebnisse der Experiment genauer betrachtet. Sowohl wie Trainingsverläufe, als auch die Resultate der Evaluation des \gls{Modell}s, über den Testdatensatz, werden genauer beschrieben. Bei den Verlustkurven stellt die blaue Kurve immer das Referenzmodell mit den Standardwerten dar. Es wird dabei außerdem auf die Auswirkungen der verschiedenen Parameter, so wie die Aussagekraft der Metriken eingegangen. 
 
 \subsection{1. Experiment}
-Das erste Experiment untersuchte die Lernrate im Hinblick auf das Training und die Leistung des \gls{Modell}s. Die Lernrate ist einer der wichtigsten Hyperparameter den es beim Training zu konfigurieren gilt. Sie bestimmt, wie sehr die internen Gewichte angepasst werden. Zunächst wird der Verlauf des Trainings betrachtet, welcher in Anhang \ref{appendix:Experiment1Verlustkurven} zu sehen ist. Zuerst wird dabei auf den Verlust im Trainingsdatensatz eingegangen, welcher über 20 Epochen protokolliert wurde. Die grüne Kurve, welche das Modell ``LR0.1'' mit der Lernrate $0.1$ beschreibt, startet direkt von Anfang an mit weniger Verlust als das Referenzmodell, aber verringert diesen über die Zeit nur noch minimal. Möglicherweise werden hier wichtige Minima der Verlustfunktion übersprungen, weshalb das  Modell ``LR0.1'' hier einen relativ hohen Verlust hat.
+\label{subsec:1.Experiment}
+Das erste Experiment untersuchte die Lernrate im Hinblick auf das Training und die Leistung des \gls{Modell}s. Zuerst wird der Verlauf des Trainings betrachtet, welcher in Anhang \ref{appendix:Experiment1Verlustkurven} zu sehen ist, anschließend werden die verschiedenen Metriken hinzugezogen, um die Leistung der Modelle zu vergleichen. \\
+Zunächst wird der Verlust mit Trainings- und Validierungsdatensatz betrachtet und interpretiert. Die Abbildungen \ref{fig:ex1_lr_train} und \ref{fig:ex1_lr_val} zeigen die Verlustkurven der verschiedenen Modell mit je dem Trainings- und Validierungsdatensatz.\\ 
+Die nachfolgende Diskussion und Interpretation der Kurven beziehen sich vorerst, sofern nicht anders erwähnt, auf die Abb. \ref{fig:ex1_lr_train} und den Trainingsdatensatz. Die grüne Kurve, welche das Modell ``LR0.1'' mit der Lernrate $0.1$ beschreibt, hat direkt von Anfang an einen geringeren Verlust als das Referenzmodell, aber verringert diesen über die Zeit nur noch minimal. Möglicherweise werden hier wichtige Minima der Verlustfunktion übersprungen, weshalb das  Modell ``LR0.1'' relativ schnell mit einem hohen Verlust im konvergiert.\\
+Vergleichsweise dazu hat das Modell ``LR0.001'', die rote Kurve, mit einer Lernrate von $0.001$, zu Beginn einen höheren Verlust, welcher noch über einige Epochen so bleibt und dann schlagartig fällt. Der Verlust von Modell ``LR0.001'' unterschreitet den des Referenzmodells und hat am Ende der 20 Epochen einen geringeren Verlust als das Referenzmodell. Durch die geringe Lernrate von Modell ``LR0.001'' sinkt der Verlust zu Beginn vergleichsweise langsam, da die internen Parameter nur minimal angepasst werden. Auf Dauer führen diese kleinen Schritte jedoch zu einem besseren Ergebnis, da wichtige Minima der Verlustfunktion weniger oder gar nicht übersprungen werden und so das \gls{Modell} besser trainiert wird. Diese Beobachtungen treffen so auch auf den Validieriungsdatensatz zu und können ähnlich interpretiert werden. Die Kurven in Abb. \ref{fig:ex1_lr_val} sind ähnlich zu den Kurven in \ref{fig:ex1_lr_train}. Hier wird ebenfalls deutlich, dass eine zu hohe Lernrate keine optimalen Resultate erbringt. So konvergiert der Verlust von Modell ``LR0.1'' bereits ab der 14. Epoche mit einem relativ hohen Wert von etwa $0.25$, während das Modell ''LR0.001`` und das Referenzmodell noch weiter den Verlust verringern.
 
-Im Vergleich dazu hat das Modell ``LR0.001'', die rote Kurve, mit einer Lernrate von $0.001$, zu Beginn einen höheren Verlust, welcher über ein einige Epochen so bleibt und dann schlagartig fällt. Der Verlust von Modell ``LR0.001'' unterschreitet den vom Referenzmodell und hat am Ende der 20 Epochen einen geringeren Verlust als ``Standard''. Durch die geringe Lernrate von Modell ``LR0.001'' sinkt der Verlust zu Beginn langsam, da die internen Parameter nur minimal angepasst werden. Auf Dauer führen diese kleinen Schritte jedoch zu einem besseren Ergebnis, da wichtige Minima der Verlustfunktion weniger, bis gar nicht übersprungen werden.
-
-Die Ergebnisse der Metriken unterstreichen den Verlauf des Trainings, so hat Modell ''LR0.001`` die beste Leistung erbracht. Ein Blick auf die Metriken ergibt einen Dice Koeeffizenten von über 90\% und einen Jaccard Index von 87.81\%, was recht gute Ergebnisse sind. Die Pixel Accuracy hingegen ist eher unaussagekräftig, da sich die Werte nur minimal mit unterscheiden mit einer Differenz von $0.73\%$.
+Die Ergebnisse der Metriken (siehe Tabelle \ref{table:1.ExperimentErgebnisse}) unterstreichen den Verlauf des Trainings, so hat Modell ``LR0.001'' die beste Leistung erbracht. Ein Blick auf die Metriken ergibt einen Dice Koeeffizenten von über 90\% und einen Jaccard Index von rund 88\%, was recht gute Ergebnisse sind im Anbetracht des kurzen Trainings und der geringen Vorverarbeitung. Die Pixel Accuracy hingegen ist unaussagekräftig, da sich die Werte nur minimal unterscheiden mit einer Differenz von maximal $0.54\%$.
 
 \subsection{2. Experiment}
+Im Rahmen des zweiten Experiments wurde die Auswirkung der Batch-Größe untersucht. Zunächst werden, ähnlich wie im ersten Experiment (siehe Abschnitt \ref{subsec:1.Experiment}), die Trainingsverläufe betrachtet (siehe Anhang \ref{appendix:Experiment2Verlustkurven}), gefolgt von einer Bewertung der Leistung anhand der genannten Metriken.\\
+Zu Beginn wird der Verlust mit dem Trainingsdatensatz betrachtet, welcher in Abbildung \ref{fig:ex2_batch_train} dargestellt ist. Die Verlustkurven verlaufen in diesem Experiment sehr ähnlich, jedoch mit unterschiedlichen Verlustwerten. Die grüne Kurve, das Modell ``B64'' mit einer Batch Größe von $64$, hat im Vergleich zum Referenzmodell einen höheren Verlust in den Anfangsepochen, nähert sich in den Endepochen jedoch dem Referenzmodell an. Die rote Kurve, das Modell ``B8'' mit einer Batchgröße von $8$, hat einen hohen Verlust im Vergleich zu den anderen beiden Modellen. \\
+Ein interessanter Aspekt ist der Verlauf der Verlustkurven in Bezug auf den Validierungsdatensatz, der in Abbildung \ref{fig:ex2_batch_val} dargestellt ist, welcher nachfolgend genauer betrachtet wird. Dabei fällt auf, dass die rote Kurve von Beginn an einen niedrigen Validierungsverlust hat, aber eher unruhig verläuft und häufiger steile Anstiege aufweist. Im Gegensatz dazu verläuft die grüne Kurve etwas gleichmäßiger weißt jedoch auch einige Anstiege auf. Allerdings steigt die grüne Kurve gegen Ende des Trainings wieder an, ab der 16. Epoche zeigt das Modell ``B64'' einen kontinuierlichen Anstieg der Verlustwerte, was auf ein Overfitting des Modells hinweisen könnte. Das Referenzmodell mit der blauen Kurve hingegen weist einen ruhigeren Verlauf auf, zeigt jedoch auch einen signifikanten Sprung ab etwa der Hälfte des Verlaufes. Es zeigt sich, dass das Modell ``B64'' anfänglich eine bessere Performance aufweist, aber später ein Overfitting entwickelt. Das Referenzmodell hingegen zeigt insgesamt eine stabilere Leistung, obwohl es im Bezug auf den Validierungsdatensatz einen deutlichen Sprung des Verlustwerts aufweist. 
+
+Bei Betrachten der Metriken in Tabelle \ref{table:2.ExperimentErgebnisse} wird deutlich, dass das Referenzmodell im Vergleich zu den anderen beiden Modellen die besten Ergebnisse erzielt. Sowohl der Dice Koeffizienten, als auch der Jaccard Index weisen eine Verbesserung von rund $3\%$ für das Referenzmodell gegenüber dem Modell ``B64'' auf. Die Pixel Accuracy liefert in diesem Fall keine aussagekräftigen Informationen über die Leistung der Modelle, da die Unterschiede nur minimal sind. Die Wahl der Batch Größe von 32 bei einer Datenmenge von 25000 Bildern erweist sich somit als geeignet und führt zu guten Ergebnissen.
+
+
 \subsection{3. Experiment}
+Im Rahmen des dritten Experiments wurden die Auswirkungen der Vorverarbeitung auf die Qualität und Leistung des Modells untersucht. Es sei nochmals darauf hingewiesen, dass der Unterschied zwischen den beiden Modellen lediglich in einem Schritt der Vorverarbeitung besteht, wie bereits in Abschnitt \ref{subsec:3.Experiment-Vorverarbeitung} erläutert. Die verwendeten Hyperparameter für dieses Experiment entsprechen den Standardwerten gemäß Tabelle \ref{table:StandardWerte}. Ebenso werden zunächst die Trainingsverläufe betrachtet und abschließend die Leistung der Modelle mithilfe der genannten Metriken bewertet. Die Verlustkurven für dieses Experiment sind in Anhang \ref{appendix:Experiment3Verlustkurven} dargestellt.\\
+Der Verlauf des Verlusts im Bezug auf den Trainingsdatensatz, dargestellt in Abb. \ref{fig:ex3_prepro_train}, ist bei beiden Modellen recht ähnlich. Die rote Kurve, Modell ``Scaled'', besitzt, bis auf zu Beginn, immer einen höheren Verlust als das Referenzmodell. Der Verlauf beider kurven ist nahezu identisch, jedoch differieren die Werte der beiden Kurven um etwa $0.05 - 0.1$. Die Ähnlichkeit der beiden Kurven zeigt, dass sich die Vorverarbeitung, in diesem Fall das entfernen irrelevanter Informationen, positiv auf die Leistung auswirkt, aber keinen größeren Einfluss auf den Verlauf des Trainings besitzt.\\
+Parallelen der beiden Modelle finden sich auf im Verlauf des Verlust im Bezug auf den Validierungsdatensatz wieder, welcher in Abb. \ref{fig:ex3_prepro_val} zu sehen ist. Besonders am Anfang und Ende des Trainings verlaufen die beiden Kurven sehr analog zueinander, lediglich die rote Kurve hat höhere Werte wie auch im Trainingsdatensatz. Hier zeigt sich ebenfalls, dass durch geeignete Vorverarbeitungsmaßnahmen bessere Leistungen während des Trainings erzielt werden können.
+
+Deutlich sieht man diese Folgerung auch anhand der Metriken in Tabelle \ref{table:3.ExperimentErgebnisse}. Dort hat das Referenzmodell einen deutlich höheren Dice Koeffizienten, sowie auch Jaccard Index. Die Differenz liegt in diesem Fall nicht nur bei einer geringen Prozentzahl wie bei den vorherigen Experiment, sondern bei etwa $7\%$, was ein deutlicher Unterschied in Sachen Leistung ist.
+
+
 
 \section{Fehleranalyse und Verbesserungen}
