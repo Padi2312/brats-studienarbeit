@@ -34,8 +34,8 @@ Die Pixelgenauigkeit wird berechnet, indem die vorhergesagten Labels jedes Pixel
 Hierbei sind alle $p_{ii}$ als True Positive anzusehen und alle $p_{ij}$ als False Positive bzw. False Negative. \cite[vgl.][]{Hurtado2022}
 
 \section{Beschreibung Experimente}
-Nachfolgend werden die verschiedenen Experimente bzw. \glspl{Modell} beschrieben, sowie die Rahmenbedingungen festgelegt. Der verwendete Datensatz enthält 25000 2D Bilder mit einer Größe von je 128x128 Pixeln. Die Vorverarbeitung beinhaltet das zusammenführen der vier Modalitäten, sowie ein Zuschneiden und Skalieren der einzelnen Bilder. Als Standardwerte für die jeweils nicht zu untersuchenden Parameter werden folgende Werte festgelegt:
-\begin{table}[h!]
+Nachfolgend werden die verschiedenen Experimente bzw. \glspl{Modell} beschrieben, sowie die Rahmenbedingungen festgelegt. Der verwendete Datensatz enthält 25000 2D Bilder mit einer Größe von je 128x128 Pixeln. Die Vorverarbeitung beinhaltet das zusammenführen der vier Modalitäten, sowie ein Zuschneiden und Skalieren der einzelnen Bilder. Als Standardwerte für die jeweils nicht zu untersuchenden Parameter werden die Werte aus Tabelle \ref{table:StandardWerte} festgelegt.
+\begin{table}[!ht]
 \begin{longtable}{|c|c|}
 	\hline
 		\multicolumn{1}{|c|}{\textbf{Komponente}} & \multicolumn{1}{c|}{\textbf{Wert}} \\
@@ -53,10 +53,13 @@ Nachfolgend werden die verschiedenen Experimente bzw. \glspl{Modell} beschrieben
 	\hline
 		Verlustfunktion & Dice Loss \\
 	\hline
+		Epochen & 20 \\
+	\hline
 \end{longtable}
 \caption{Standardwerte für das Training des Neuronalen Netzes}
 \label{table:StandardWerte}
 \end{table}
+
 Die Auswertung der \glspl{Modell} erfolgt über die drei genannten Evaluierungsfunktionen. Die Ausgaben des Neuronalen Netzes werden zunächst mit Hilfe der Softmax-Funktion in den Wertebereich zwischen 0 und 1 überführt. Die neuen Werte stellen dabei eine Wahrscheinlichkeitsverteilung dar, wie bereits in Abschnitt \ref{subsec:AktivierungsfunktionenVerlust-FunktionenOptimierer} erwähnt. Anschließend werden diese Werte mit der Argmax-Funktion\footnote{Identifiziert die Kategorie mit dem höchsten Wert und gibt somit die Klassifizierung an} in die eigentlichen Tumorklassen überführt.
 
 \subsection{1. Experiment - Lernrate}
@@ -103,7 +106,6 @@ Der zweite Parameter ist die Batch Größe, welche angibt nach wie vielen Traini
 \label{subsec:3.Experiment-Vorverarbeitung}
 Das letzte Experiment untersucht keinen Hyperparameter, sondern die Auswirkungen der Vorverarbeitungen auf die Leistung des \gls{Modell}s. Wie bereits in Abschnitt \ref{paragraph:GrößenSkalierung} erwähnt, müssen die Eingaben für das U-Net eine bestimmte Größe aufweisen, damit diese verarbeitet werden können. Die Größe der Bilder kann auf unterschiedliche Weise in die gewünschte Eingabegröße gebracht werden. Eine der Methoden ist eine einfache Skalierung von der Originalgröße auf die Zielgröße, dabei kommt es zu Verlusten der Bildqualität, da umliegende Pixel bzw. dessen Farbwerte miteinander verrechnet werden. Die zweite Methode, welche genauer in Abschnitt \ref{paragraph:GrößenSkalierung} beschrieben wurde, besteht darin zunächst die nicht relevanten Teile des Bildes zu entfernen und anschließend auf die gewünschte Zielgröße zu skalieren. Durch diese Methode enthält das Bild weniger irrelevante Informationen und erfährt einen geringeren Qualitätsverlust. 
 \begin{table}[!h]
-
 	\centering
 	\begin{tabular}{|c|c|c|c|}
 		\hline
@@ -139,12 +141,18 @@ Bei Betrachten der Metriken in Tabelle \ref{table:2.ExperimentErgebnisse} wird d
 
 
 \subsection{3. Experiment}
-Im Rahmen des dritten Experiments wurden die Auswirkungen der Vorverarbeitung auf die Qualität und Leistung des Modells untersucht. Es sei nochmals darauf hingewiesen, dass der Unterschied zwischen den beiden Modellen lediglich in einem Schritt der Vorverarbeitung besteht, wie bereits in Abschnitt \ref{subsec:3.Experiment-Vorverarbeitung} erläutert. Die verwendeten Hyperparameter für dieses Experiment entsprechen den Standardwerten gemäß Tabelle \ref{table:StandardWerte}. Ebenso werden zunächst die Trainingsverläufe betrachtet und abschließend die Leistung der Modelle mithilfe der genannten Metriken bewertet. Die Verlustkurven für dieses Experiment sind in Anhang \ref{appendix:Experiment3Verlustkurven} dargestellt.\\
+\label{subsec:3.Experiment}
+Das dritte Experiment untersucht die Auswirkungen der Vorverarbeitung auf die Qualität und Leistung des Modells. Es sei nochmals darauf hingewiesen, dass der Unterschied zwischen den beiden Modellen lediglich in einem Schritt der Vorverarbeitung besteht, wie bereits in Abschnitt \ref{subsec:3.Experiment-Vorverarbeitung} erläutert. Die verwendeten Hyperparameter für dieses Experiment entsprechen den Standardwerten gemäß Tabelle \ref{table:StandardWerte}. Ebenso werden zunächst die Trainingsverläufe betrachtet und abschließend die Leistung der Modelle mithilfe der genannten Metriken bewertet. Die Verlustkurven für dieses Experiment sind in Anhang \ref{appendix:Experiment3Verlustkurven} dargestellt.\\
 Der Verlauf des Verlusts im Bezug auf den Trainingsdatensatz, dargestellt in Abb. \ref{fig:ex3_prepro_train}, ist bei beiden Modellen recht ähnlich. Die rote Kurve, Modell ``Scaled'', besitzt, bis auf zu Beginn, immer einen höheren Verlust als das Referenzmodell. Der Verlauf beider kurven ist nahezu identisch, jedoch differieren die Werte der beiden Kurven um etwa $0.05 - 0.1$. Die Ähnlichkeit der beiden Kurven zeigt, dass sich die Vorverarbeitung, in diesem Fall das entfernen irrelevanter Informationen, positiv auf die Leistung auswirkt, aber keinen größeren Einfluss auf den Verlauf des Trainings besitzt.\\
 Parallelen der beiden Modelle finden sich auf im Verlauf des Verlust im Bezug auf den Validierungsdatensatz wieder, welcher in Abb. \ref{fig:ex3_prepro_val} zu sehen ist. Besonders am Anfang und Ende des Trainings verlaufen die beiden Kurven sehr analog zueinander, lediglich die rote Kurve hat höhere Werte wie auch im Trainingsdatensatz. Hier zeigt sich ebenfalls, dass durch geeignete Vorverarbeitungsmaßnahmen bessere Leistungen während des Trainings erzielt werden können.
 
 Deutlich sieht man diese Folgerung auch anhand der Metriken in Tabelle \ref{table:3.ExperimentErgebnisse}. Dort hat das Referenzmodell einen deutlich höheren Dice Koeffizienten, sowie auch Jaccard Index. Die Differenz liegt in diesem Fall nicht nur bei einer geringen Prozentzahl wie bei den vorherigen Experiment, sondern bei etwa $7\%$, was ein deutlicher Unterschied in Sachen Leistung ist.
 
 
-
 \section{Fehleranalyse und Verbesserungen}
+Im Hinblick auf die Weiterentwicklung dieses Modells gilt es potentielle Fehlerquellen zu beseitigen und Verbesserungen bezüglich seiner Leistung auszuarbeiten. Die Tatsache, dass jedes der Modelle einen gewissen ``Grundverlust'' aufweist, lässt darauf schließen, dass es noch Raum für Verbesserungen gibt. Ein wichtiger Aspekt, der bereits in Kapitel \ref{sec:Datensatz} behandelt wurde, ist die Vorverarbeitung der Daten. Verschiedene Faktoren wie Skalierung, Normalisierung und Datenaugmentierung können sich auf die Leistung des Modells auswirken.\\
+Die Ergebnisse des dritten Experiments in Abschnitt \ref{subsec:3.Experiment} verdeutlichen die Bedeutung der Entfernung irrelevanter Informationen aus den Bildern. Die Vorverarbeitungsmethoden, die in dieser Arbeit angewendet wurden, könnten weiter verbessert werden, indem die Daten besser zugeschnitten werden, um möglichst viele relevante Informationen dem neuronalen Netzwerk zuzuführen. Zudem sollte eine höhere Auflösung der Bilder in Betracht gezogen werden, da die Skalierung zu Qualitätsverlusten führt und das Modell aufgrund weniger verfügbarer Pixel beeinträchtigt.\\
+Im Rahmen der Experimente wurden lediglich 25.000 Bilder verwendet. Eine deutliche Steigerung dieser Anzahl ermöglicht es dem Modell, mehr Bilder für das Training zu nutzen und somit mehr Strukturen zu erlernen. Aufgrund begrenzter Ressourcen und zeitlicher Einschränkungen wurde jedoch nur eine Teilmenge der verfügbaren Daten verwendet. Wenn die gesamte Datenmenge von etwa 160.000 Bildern für das Training herangezogen wird, sollte auch die Anzahl der Schichten im neuronalen Netzwerk erhöht werden. Durch eine größere Anzahl von Schichten kann das Netzwerk mehr Feature-Maps generieren, die für die Segmentierung von Gehirntumoren verwendet werden können. \cite[vgl.][]{Teoh2023}\\
+Ebenfalls eine Verbesserung der Leistung des Modells kann durch die optimierte Auswahl der Hyperparameter kommen. Es kann nicht nur zur Leistungssteigerung führen, sondern auch zu einem effektiveren Training. kann ebenfalls zu einer Steigerung der Leistung des Modells, sowie einem effizienteren Training führen. Hierfür kann man systematisch diverse Kombinationen von Hyperparametern auswählen. 
+
+
